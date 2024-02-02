@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "698503860577",
+    "project_id": "go-bro-8fa0c",
+    "storage_bucket": "go-bro-8fa0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698503860577:android:cc4e4134f958a689d87520",
+        "android_client_info": {
+          "package_name": "com.gobro.driversapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA76cxoVgkbvcejrqZyxtF8k-XHy7awOrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698503860577:android:1525ddffb1c7cf54d87520",
+        "android_client_info": {
+          "package_name": "com.gobro.usersapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA76cxoVgkbvcejrqZyxtF8k-XHy7awOrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
