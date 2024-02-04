@@ -106,6 +106,7 @@ class PushNotificationSystem
 
       tripDetailsInfo.userName = (dataSnapshot.snapshot.value! as Map)["userName"];
       tripDetailsInfo.userPhone = (dataSnapshot.snapshot.value! as Map)["userPhone"];
+      tripDetailsInfo.fareAmount = (dataSnapshot.snapshot.value! as Map)["fareAmount"];
 
       tripDetailsInfo.tripID = tripID;
 

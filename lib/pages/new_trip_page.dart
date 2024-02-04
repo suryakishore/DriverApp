@@ -280,7 +280,7 @@ class _NewTripPageState extends State<NewTripPage>
 
     Navigator.pop(context);
 
-    String fareAmount = (cMethods.calculateFareAmount(directionDetailsEndTripInfo!)).toString();
+    String fareAmount = widget.newTripDetailsInfo!.fareAmount!;
 
     await FirebaseDatabase.instance.ref().child("tripRequests")
         .child(widget.newTripDetailsInfo!.tripID!)
