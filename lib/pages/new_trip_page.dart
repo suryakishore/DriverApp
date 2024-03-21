@@ -4,7 +4,6 @@ import 'package:drivers_app/methods/map_theme_methods.dart';
 import 'package:drivers_app/models/trip_details.dart';
 import 'package:drivers_app/widgets/payment_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -13,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../global/global_var.dart';
+import '../methods/push_notification_service.dart';
 import '../widgets/loading_dialog.dart';
 
 
@@ -270,7 +270,7 @@ class _NewTripPageState extends State<NewTripPage>
       context: context,
       builder: (BuildContext context) => LoadingDialog(messageText: 'Please wait...',),
     );
-
+    String deviceToken = "",userName = "",startAddress = "",endAddress = "";
     var driverCurrentLocationLatLng = LatLng(driverCurrentPosition!.latitude, driverCurrentPosition!.longitude);
 
     var directionDetailsEndTripInfo = await CommonMethods.getDirectionDetailsFromAPI(
@@ -278,9 +278,32 @@ class _NewTripPageState extends State<NewTripPage>
         driverCurrentLocationLatLng, //destination
     );
 
-    Navigator.pop(context);
+    double updatedFareAmount = 0.0;
+    print("fareAmount "+widget.newTripDetailsInfo!.fareAmount!+" tripID "+widget.newTripDetailsInfo!.tripID!);
+    if(widget.newTripDetailsInfo!.fareAmount!=null&& widget.newTripDetailsInfo!.fareAmount!.isNotEmpty){
+      updatedFareAmount = double.parse(widget.newTripDetailsInfo!.fareAmount!);
+    }
 
-    String fareAmount = widget.newTripDetailsInfo!.fareAmount!;
+    DatabaseReference tripRequestsRef = FirebaseDatabase.instance
+        .ref()
+        .child("tripRequests")
+        .child(widget.newTripDetailsInfo!.tripID!);
+
+    await tripRequestsRef.once().then((dataSnapshot) {
+      deviceToken = (dataSnapshot.snapshot.value! as Map)["deviceToken"];
+      userName = (dataSnapshot.snapshot.value! as Map)["userName"];
+      startAddress = (dataSnapshot.snapshot.value! as Map)["pickUpAddress"];
+      endAddress = (dataSnapshot.snapshot.value! as Map)["dropOffAddress"];
+
+      final tipAmount = (dataSnapshot.snapshot.value! as Map)["Tip"];
+      if (tipAmount != null && tipAmount!.isNotEmpty) {
+        if (tipAmount != "Tip in cash") {
+          updatedFareAmount = updatedFareAmount + double.parse(tipAmount);
+        }
+      }
+    });
+
+    String fareAmount = updatedFareAmount.toString();
 
     await FirebaseDatabase.instance.ref().child("tripRequests")
         .child(widget.newTripDetailsInfo!.tripID!)
@@ -290,6 +313,7 @@ class _NewTripPageState extends State<NewTripPage>
         .child(widget.newTripDetailsInfo!.tripID!)
         .child("status").set("ended");
 
+    Navigator.pop(context);
     positionStreamNewTripPage!.cancel();
 
     //dialog for collecting fare amount
@@ -297,6 +321,10 @@ class _NewTripPageState extends State<NewTripPage>
 
     //save fare amount to driver total earnings
     saveFareAmountToDriverTotalEarnings(fareAmount);
+    print("sendNotificationToSelectedDriver "+deviceToken.toString());
+    //send notification
+    PushNotificationService.sendNotificationToSelectedDriver(userName,
+        deviceToken, context, widget.newTripDetailsInfo!.tripID!, fareAmount, startAddress, endAddress);
   }
 
   displayPaymentDialog(fareAmount, userName)

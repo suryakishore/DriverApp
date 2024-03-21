@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 String userName = "";
 
 String googleMapKey = "AIzaSyAVdKmIS0EeB_CHXM13VBWjv8cBYWkOEns";
+String serverKeyFCM = "key=AAAAoqITEWE:APA91bGsu3cfBei1uOci59-4sIlbpKdkSrUqN6ZiwCXZS98s6SWZnxYki-iiDPD9qRomdmSj1NEZjEtLK6bTdbPX6LdBcdw3pH2dewEUlbdyuQJoB79YuZlvOEW4szlit0RgyXuaTQus";
 
 const CameraPosition googlePlexInitialPosition = CameraPosition(
   target: LatLng(37.42796133580664, -122.085749655962),

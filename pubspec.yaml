@@ -49,6 +49,7 @@ dependencies:
   firebase_messaging:
   assets_audio_player:
   http:
+  provider:
   flutter_polyline_points:
   url_launcher:
   restart_app:
